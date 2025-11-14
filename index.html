@@ -130,68 +130,9 @@
 
       // Open popup
       box.addEventListener("click", () => {
+        showBalloon();
+
         popup.classList.remove("hidden");
-        for (let i = 0; i < 50; i++) {
-          const balloon = document.createElement("div");
-          const size = Math.random() * 30 + 50;
-          balloon.classList.add("balloon");
-          balloon.style.width = size + "px";
-          balloon.style.height = size * 1.25 + "px";
-
-          // Start position: BELOW the screen
-          const startY = window.innerHeight + 150;
-          balloon.style.bottom = "-" + (size + 100) + "px";
-          balloon.style.left = Math.random() * window.innerWidth + "px";
-
-          // 🎈 Vibrant colors
-          const colors = [
-            "#ff4b4b",
-            "#ff9f1c",
-            "#ffda3e",
-            "#5dd39e",
-            "#3da9fc",
-            "#9d4edd",
-            "#ff77e9",
-            "#00c2ff",
-          ];
-          balloon.style.backgroundColor =
-            colors[Math.floor(Math.random() * colors.length)];
-
-          // Add balloon string
-          const string = document.createElement("div");
-          string.classList.add("string");
-          balloon.appendChild(string);
-
-          document.body.appendChild(balloon);
-
-          // 🎈 Dynamic rise with horizontal drift and fade
-          const riseDistance = window.innerHeight + size * 2;
-          const duration = 5000 + Math.random() * 3000; // 5-8 seconds
-          const horizontalDrift = (Math.random() - 0.5) * (window.innerWidth * 0.2); // Drift 10% of screen width
-          
-          // Create keyframes for smooth animation
-          const keyframes = [
-            { 
-              transform: `translate(0, 0)`, 
-              opacity: 0.9 
-            },
-            { 
-              transform: `translate(${horizontalDrift}px, -${riseDistance}px)`,
-              opacity: 0 
-            }
-          ];
-          
-          // Apply the animation
-          const animation = balloon.animate(keyframes, {
-            duration: duration,
-            easing: "ease-out",
-            fill: "forwards",
-          });
-
-          // Clean up after animation completes
-          animation.onfinish = () => balloon.remove();
-          setTimeout(() => balloon.remove(), duration + 1000);
-        }
       });
 
       // Close popup
@@ -210,7 +151,7 @@
         const maxBalloonSize = window.innerWidth < 640 ? 40 : 50; // Smaller balloons on mobile
         const minBalloonSize = window.innerWidth < 640 ? 25 : 30;
         
-        for (let i = 0; i < 70; i++) {
+        for (let i = 0; i < 100; i++) {
           const balloon = document.createElement("div");
         //  const size = Math.random() * (maxBalloonSize - minBalloonSize) + minBalloonSize;
           const size = Math.random() * 30 + 50;
@@ -246,10 +187,15 @@
 
           document.body.appendChild(balloon);
 
-          // 🎈 Dynamic rise with horizontal drift and fade
+          // 🎈 Dynamic rise with horizontal drift and fade, constrained to viewport
           const riseDistance = window.innerHeight + size * 2;
           const duration = 5000 + Math.random() * 3000; // 5-8 seconds
-          const horizontalDrift = (Math.random() - 0.5) * (window.innerWidth * 0.2); // Drift 10% of screen width
+
+          // Limit drift so balloon never leaves the visible width
+          const maxLeftOffset = (maxLeft - 10) - leftPosition;
+          const minLeftOffset = 10 - leftPosition;
+          const horizontalDrift =
+            Math.random() * (maxLeftOffset - minLeftOffset) + minLeftOffset;
           
           // Create keyframes for smooth animation
           const keyframes = [
@@ -279,6 +225,77 @@
         celebration.classList.remove("hidden");
         setTimeout(() => celebration.classList.add("hidden"), 4000);
       });
+
+      function showBalloon(){
+        for (let i = 0; i < 100; i++) {
+          const balloon = document.createElement("div");
+          const size = Math.random() * 30 + 50;
+          balloon.classList.add("balloon");
+          balloon.style.width = size + "px";
+          balloon.style.height = size * 1.25 + "px";
+
+          // Start position: BELOW the screen
+          const startY = window.innerHeight + 150;
+          balloon.style.bottom = "-" + (size + 100) + "px";
+          const maxLeft = window.innerWidth - size;
+          const leftPosition = Math.max(10, Math.min(maxLeft - 10, Math.random() * maxLeft));
+          balloon.style.left = leftPosition + "px";
+
+          // 🎈 Vibrant colors
+          const colors = [
+            "#ff4b4b",
+            "#ff9f1c",
+            "#ffda3e",
+            "#5dd39e",
+            "#3da9fc",
+            "#9d4edd",
+            "#ff77e9",
+            "#00c2ff",
+          ];
+          balloon.style.backgroundColor =
+            colors[Math.floor(Math.random() * colors.length)];
+
+          // Add balloon string
+          const string = document.createElement("div");
+          string.classList.add("string");
+          balloon.appendChild(string);
+
+          document.body.appendChild(balloon);
+
+          // 🎈 Dynamic rise with horizontal drift and fade, constrained to viewport
+          const riseDistance = window.innerHeight + size * 2;
+          const duration = 5000 + Math.random() * 3000; // 5-8 seconds
+
+          // Limit drift so balloon never leaves the visible width
+          const maxLeftOffset = (maxLeft - 10) - leftPosition;
+          const minLeftOffset = 10 - leftPosition;
+          const horizontalDrift =
+            Math.random() * (maxLeftOffset - minLeftOffset) + minLeftOffset;
+          
+          // Create keyframes for smooth animation
+          const keyframes = [
+            { 
+              transform: `translate(0, 0)`, 
+              opacity: 0.9 
+            },
+            { 
+              transform: `translate(${horizontalDrift}px, -${riseDistance}px)`,
+              opacity: 0 
+            }
+          ];
+          
+          // Apply the animation
+          const animation = balloon.animate(keyframes, {
+            duration: duration,
+            easing: "ease-out",
+            fill: "forwards",
+          });
+
+          // Clean up after animation completes
+          animation.onfinish = () => balloon.remove();
+          setTimeout(() => balloon.remove(), duration + 1000);
+        }
+      }
     </script>
   </body>
 </html>
