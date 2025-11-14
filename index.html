@@ -76,10 +76,10 @@
     <!-- Birthday Popup -->
     <div
       id="popupCard"
-      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden p-4"
+      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden p-4 overflow-y-auto"
     >
       <div
-        class="bg-gradient-to-tr from-yellow-400 to-pink-500 rounded-3xl shadow-2xl max-w-sm w-full p-6 relative text-center text-white animate-fadeIn"
+        class="bg-gradient-to-tr from-yellow-400 to-pink-500 rounded-3xl shadow-2xl w-full max-w-xs sm:max-w-sm mx-auto my-8 p-4 sm:p-6 relative text-center text-white animate-fadeIn"
       >
         <button
           id="closeBtn"
@@ -88,19 +88,22 @@
           &times;
         </button>
 
-        <img
-          src="https://media.tenor.com/lrqpjkFFu7UAAAAM/dino-kuning-dino-boy.gif"
-          class="w-40 mx-auto mb-4 rounded-full border-4 border-white shadow-lg"
-        />
+        <div class="w-32 h-32 sm:w-40 sm:h-40 mx-auto mb-4">
+          <img
+            src="https://media.tenor.com/lrqpjkFFu7UAAAAM/dino-kuning-dino-boy.gif"
+            class="w-full h-full object-cover rounded-full border-4 border-white shadow-lg"
+            alt="Birthday Dino"
+          />
+        </div>
 
-        <h2 class="text-3xl font-extrabold mb-1">Happy Birthday! 🎂</h2>
-        <p class="text-lg mb-4">
+        <h2 class="text-2xl sm:text-3xl font-extrabold mb-1">Happy Birthday! 🎂</h2>
+        <p class="text-base sm:text-lg mb-4 px-2">
           Wishing you a day full of joy, surprises, and love! 💖
         </p>
-        <p><small>Click celebrate</small></p>
+        <p class="text-sm sm:text-base"><small>Click celebrate</small></p>
         <button
           id="celebrateBtn"
-          class="mt-4 bg-white text-pink-600 font-bold py-2 px-6 rounded-full hover:bg-yellow-300 transition-colors relative overflow-hidden"
+          class="mt-4 bg-white text-pink-600 font-bold py-2 px-6 rounded-full hover:bg-yellow-300 transition-colors relative overflow-hidden text-sm sm:text-base w-full sm:w-auto"
         >
           Celebrate 🎉
         </button>
@@ -161,22 +164,33 @@
 
           document.body.appendChild(balloon);
 
-          // 🎈 Dynamic rise based on actual screen height
+          // 🎈 Dynamic rise with horizontal drift and fade
           const riseDistance = window.innerHeight + size * 2;
-
-          balloon.animate(
-            [
-              { transform: `translateY(${riseDistance}px)` },
-              { transform: `translateY(-${riseDistance}px)` },
-            ],
-            {
-              duration: 6000 + Math.random() * 2000,
-              easing: "ease-out",
-              fill: "forwards",
+          const duration = 5000 + Math.random() * 3000; // 5-8 seconds
+          const horizontalDrift = (Math.random() - 0.5) * (window.innerWidth * 0.2); // Drift 10% of screen width
+          
+          // Create keyframes for smooth animation
+          const keyframes = [
+            { 
+              transform: `translate(0, 0)`, 
+              opacity: 0.9 
+            },
+            { 
+              transform: `translate(${horizontalDrift}px, -${riseDistance}px)`,
+              opacity: 0 
             }
-          );
+          ];
+          
+          // Apply the animation
+          const animation = balloon.animate(keyframes, {
+            duration: duration,
+            easing: "ease-out",
+            fill: "forwards",
+          });
 
-          setTimeout(() => balloon.remove(), 8000);
+          // Clean up after animation completes
+          animation.onfinish = () => balloon.remove();
+          setTimeout(() => balloon.remove(), duration + 1000);
         }
       });
 
@@ -192,17 +206,23 @@
 
       // 🎈 Balloon Animation + Celebration GIF
       celebrateBtn.addEventListener("click", () => {
-        for (let i = 0; i < 20; i++) {
+        const balloonCount = window.innerWidth < 640 ? 15 : 20; // Fewer balloons on mobile
+        const maxBalloonSize = window.innerWidth < 640 ? 40 : 50; // Smaller balloons on mobile
+        const minBalloonSize = window.innerWidth < 640 ? 25 : 30;
+        
+        for (let i = 0; i < balloonCount; i++) {
           const balloon = document.createElement("div");
-          const size = Math.random() * 30 + 50;
+          const size = Math.random() * (maxBalloonSize - minBalloonSize) + minBalloonSize;
           balloon.classList.add("balloon");
-          balloon.style.width = size + "px";
-          balloon.style.height = size * 1.25 + "px";
+          balloon.style.width = `${size}px`;
+          balloon.style.height = `${size * 1.25}px`;
 
-          // Start position: BELOW the screen
-          const startY = window.innerHeight + 150;
-          balloon.style.bottom = "-" + (size + 100) + "px";
-          balloon.style.left = Math.random() * window.innerWidth + "px";
+          // Calculate position to ensure balloons stay within viewport
+          const maxLeft = window.innerWidth - size;
+          const leftPosition = Math.max(10, Math.min(maxLeft - 10, Math.random() * maxLeft));
+          
+          balloon.style.bottom = `-${size + 50}px`;
+          balloon.style.left = `${leftPosition}px`;
 
           // 🎈 Vibrant colors
           const colors = [
@@ -225,22 +245,33 @@
 
           document.body.appendChild(balloon);
 
-          // 🎈 Dynamic rise based on actual screen height
+          // 🎈 Dynamic rise with horizontal drift and fade
           const riseDistance = window.innerHeight + size * 2;
-
-          balloon.animate(
-            [
-              { transform: `translateY(${riseDistance}px)` },
-              { transform: `translateY(-${riseDistance}px)` },
-            ],
-            {
-              duration: 6000 + Math.random() * 2000,
-              easing: "ease-out",
-              fill: "forwards",
+          const duration = 5000 + Math.random() * 3000; // 5-8 seconds
+          const horizontalDrift = (Math.random() - 0.5) * (window.innerWidth * 0.2); // Drift 10% of screen width
+          
+          // Create keyframes for smooth animation
+          const keyframes = [
+            { 
+              transform: `translate(0, 0)`, 
+              opacity: 0.9 
+            },
+            { 
+              transform: `translate(${horizontalDrift}px, -${riseDistance}px)`,
+              opacity: 0 
             }
-          );
+          ];
+          
+          // Apply the animation
+          const animation = balloon.animate(keyframes, {
+            duration: duration,
+            easing: "ease-out",
+            fill: "forwards",
+          });
 
-          setTimeout(() => balloon.remove(), 8000);
+          // Clean up after animation completes
+          animation.onfinish = () => balloon.remove();
+          setTimeout(() => balloon.remove(), duration + 1000);
         }
 
         // Celebration GIF
