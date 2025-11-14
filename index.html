@@ -1,166 +1,252 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Birthday Pop-up</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Birthday Pop-up</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
 
-<style>
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .animate-fadeIn {
-    animation: fadeIn 0.5s ease-out;
-  }
-
-  /* 🎈 Crisp Balloon Style */
-  .balloon {
-    position: absolute;
-    border-radius: 50%;
-    pointer-events: none;
-    animation-timing-function: ease-out;
-    animation-fill-mode: forwards;
-    z-index: 100;
-    box-shadow: inset -8px -12px 0 rgba(0,0,0,0.18);
-  }
-
-  .balloon::after {
-    content: "";
-    position: absolute;
-    top: 15%;
-    left: 20%;
-    width: 25%;
-    height: 25%;
-    background: rgba(255,255,255,0.7);
-    border-radius: 50%;
-    filter: blur(2px);
-  }
-
-  .string {
-    position: absolute;
-    width: 2px;
-    height: 50px;
-    background: #444;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    opacity: 0.8;
-  }
-</style>
-
-</head>
-
-<body class="bg-gradient-to-b from-blue-200 via-pink-200 to-yellow-100 flex items-center justify-center min-h-screen p-4 relative overflow-hidden">
-
-  <!-- Clickable Birthday Box -->
-  <div id="clickBox" class="bg-pink-500 hover:bg-pink-600 text-white font-bold py-6 px-8 rounded-2xl shadow-2xl cursor-pointer text-center transition-all duration-300 transform hover:scale-105 w-full max-w-xs flex flex-col items-center gap-2">
-    <i class="fa-solid fa-gift text-4xl"></i>
-    <span class="text-lg">Buksan Mo! 🎉</span>
-  </div>
-
-  <!-- Birthday Popup -->
-  <div id="popupCard" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden p-4">
-    <div class="bg-gradient-to-tr from-yellow-400 to-pink-500 rounded-3xl shadow-2xl max-w-sm w-full p-6 relative text-center text-white animate-fadeIn">
-
-      <button id="closeBtn" class="absolute top-3 right-3 text-white text-2xl hover:text-blue-300">&times;</button>
-
-      <img src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif"
-           class="w-40 mx-auto mb-4 rounded-full border-4 border-white shadow-lg">
-
-      <h2 class="text-3xl font-extrabold mb-1">Happy Birthday! 🎂</h2>
-      <p class="text-lg mb-4">Wishing you a day full of joy, surprises, and love! 💖</p>
-
-      <button id="celebrateBtn" class="mt-4 bg-white text-pink-600 font-bold py-2 px-6 rounded-full hover:bg-yellow-300 transition-colors relative overflow-hidden">
-        Celebrate 🎉
-      </button>
-    </div>
-  </div>
-
-  <!-- Celebration GIF -->
-  <div id="celebration" class="fixed inset-0 flex items-center justify-center hidden z-50 pointer-events-none">
-    <img src="https://media.giphy.com/media/5GoVLqeAOo6PK/giphy.gif" 
-         class="w-64 h-64 rounded-full">
-  </div>
-
-  <script>
-    const box = document.getElementById('clickBox');
-    const popup = document.getElementById('popupCard');
-    const closeBtn = document.getElementById('closeBtn');
-    const celebrateBtn = document.getElementById('celebrateBtn');
-    const celebration = document.getElementById('celebration');
-
-    // Open popup
-    box.addEventListener('click', () => {
-      popup.classList.remove('hidden');
-    });
-
-    // Close popup
-    closeBtn.addEventListener('click', () => {
-      popup.classList.add('hidden');
-    });
-
-    // Close when clicking background
-    popup.addEventListener('click', (e) => {
-      if (e.target === popup) popup.classList.add('hidden');
-    });
-
-    // 🎈 Balloon Animation + Celebration GIF
-    celebrateBtn.addEventListener('click', () => {
-  for (let i = 0; i < 20; i++) {
-    const balloon = document.createElement('div');
-    const size = Math.random() * 30 + 50;
-    balloon.classList.add('balloon');
-    balloon.style.width = size + "px";
-    balloon.style.height = size * 1.25 + "px";
-
-    // Start position: BELOW the screen
-    const startY = window.innerHeight + 150;
-    balloon.style.bottom = "-" + (size + 100) + "px";
-    balloon.style.left = Math.random() * window.innerWidth + "px";
-
-    // 🎈 Vibrant colors
-    const colors = [
-      "#ff4b4b", "#ff9f1c", "#ffda3e",
-      "#5dd39e", "#3da9fc", "#9d4edd",
-      "#ff77e9", "#00c2ff"
-    ];
-    balloon.style.backgroundColor =
-      colors[Math.floor(Math.random() * colors.length)];
-
-    // Add balloon string
-    const string = document.createElement("div");
-    string.classList.add("string");
-    balloon.appendChild(string);
-
-    document.body.appendChild(balloon);
-
-    // 🎈 Dynamic rise based on actual screen height
-    const riseDistance = window.innerHeight + size * 2;
-
-    balloon.animate(
-      [
-        { transform: `translateY(${riseDistance}px)` },
-        { transform: `translateY(-${riseDistance}px)` }
-      ],
-      {
-        duration: 6000 + Math.random() * 2000,
-        easing: "ease-out",
-        fill: "forwards"
+    <style>
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
-    );
+      .animate-fadeIn {
+        animation: fadeIn 0.5s ease-out;
+      }
 
-    setTimeout(() => balloon.remove(), 8000);
-  }
+      /* 🎈 Crisp Balloon Style */
+      .balloon {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+        animation-timing-function: ease-out;
+        animation-fill-mode: forwards;
+        z-index: 100;
+        box-shadow: inset -8px -12px 0 rgba(0, 0, 0, 0.18);
+      }
 
-  // Celebration GIF
-  celebration.classList.remove('hidden');
-  setTimeout(() => celebration.classList.add('hidden'), 4000);
-});
+      .balloon::after {
+        content: "";
+        position: absolute;
+        top: 15%;
+        left: 20%;
+        width: 25%;
+        height: 25%;
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 50%;
+        filter: blur(2px);
+      }
 
-  </script>
+      .string {
+        position: absolute;
+        width: 2px;
+        height: 50px;
+        background: #444;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 0.8;
+      }
+    </style>
+  </head>
 
-</body>
+  <body
+    class="bg-gradient-to-b from-blue-200 via-pink-200 to-yellow-100 flex items-center justify-center min-h-screen p-4 relative overflow-hidden"
+  >
+    <!-- Clickable Birthday Box -->
+    <div
+      id="clickBox"
+      class="bg-pink-500 hover:bg-pink-600 text-white font-bold py-6 px-8 rounded-2xl shadow-2xl cursor-pointer text-center transition-all duration-300 transform hover:scale-105 w-full max-w-xs flex flex-col items-center gap-2"
+    >
+      <i class="fa-solid fa-gift text-4xl"></i>
+      <span class="text-lg">Buksan Mo 🎉</span>
+    </div>
+
+    <!-- Birthday Popup -->
+    <div
+      id="popupCard"
+      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden p-4"
+    >
+      <div
+        class="bg-gradient-to-tr from-yellow-400 to-pink-500 rounded-3xl shadow-2xl max-w-sm w-full p-6 relative text-center text-white animate-fadeIn"
+      >
+        <button
+          id="closeBtn"
+          class="absolute top-3 right-3 text-white text-2xl hover:text-blue-300"
+        >
+          &times;
+        </button>
+
+        <img
+          src="https://media.tenor.com/lrqpjkFFu7UAAAAM/dino-kuning-dino-boy.gif"
+          class="w-40 mx-auto mb-4 rounded-full border-4 border-white shadow-lg"
+        />
+
+        <h2 class="text-3xl font-extrabold mb-1">Happy Birthday! 🎂</h2>
+        <p class="text-lg mb-4">
+          Wishing you a day full of joy, surprises, and love! 💖
+        </p>
+        <p><small>Click celebrate</small></p>
+        <button
+          id="celebrateBtn"
+          class="mt-4 bg-white text-pink-600 font-bold py-2 px-6 rounded-full hover:bg-yellow-300 transition-colors relative overflow-hidden"
+        >
+          Celebrate 🎉
+        </button>
+      </div>
+    </div>
+
+    <!-- Celebration GIF -->
+    <div
+      id="celebration"
+      class="fixed inset-0 flex items-center justify-center hidden z-50 pointer-events-none"
+    >
+      <img
+        src="https://media.tenor.com/6iqUYEgLmz0AAAAM/nailong-nailong-dancing.gif"
+        class="w-64 h-64 rounded-full"
+      />
+    </div>
+
+    <script>
+      const box = document.getElementById("clickBox");
+      const popup = document.getElementById("popupCard");
+      const closeBtn = document.getElementById("closeBtn");
+      const celebrateBtn = document.getElementById("celebrateBtn");
+      const celebration = document.getElementById("celebration");
+
+      // Open popup
+      box.addEventListener("click", () => {
+        popup.classList.remove("hidden");
+        for (let i = 0; i < 26; i++) {
+          const balloon = document.createElement("div");
+          const size = Math.random() * 30 + 50;
+          balloon.classList.add("balloon");
+          balloon.style.width = size + "px";
+          balloon.style.height = size * 1.25 + "px";
+
+          // Start position: BELOW the screen
+          const startY = window.innerHeight + 150;
+          balloon.style.bottom = "-" + (size + 100) + "px";
+          balloon.style.left = Math.random() * window.innerWidth + "px";
+
+          // 🎈 Vibrant colors
+          const colors = [
+            "#ff4b4b",
+            "#ff9f1c",
+            "#ffda3e",
+            "#5dd39e",
+            "#3da9fc",
+            "#9d4edd",
+            "#ff77e9",
+            "#00c2ff",
+          ];
+          balloon.style.backgroundColor =
+            colors[Math.floor(Math.random() * colors.length)];
+
+          // Add balloon string
+          const string = document.createElement("div");
+          string.classList.add("string");
+          balloon.appendChild(string);
+
+          document.body.appendChild(balloon);
+
+          // 🎈 Dynamic rise based on actual screen height
+          const riseDistance = window.innerHeight + size * 2;
+
+          balloon.animate(
+            [
+              { transform: `translateY(${riseDistance}px)` },
+              { transform: `translateY(-${riseDistance}px)` },
+            ],
+            {
+              duration: 6000 + Math.random() * 2000,
+              easing: "ease-out",
+              fill: "forwards",
+            }
+          );
+
+          setTimeout(() => balloon.remove(), 8000);
+        }
+      });
+
+      // Close popup
+      closeBtn.addEventListener("click", () => {
+        popup.classList.add("hidden");
+      });
+
+      // Close when clicking background
+      popup.addEventListener("click", (e) => {
+        if (e.target === popup) popup.classList.add("hidden");
+      });
+
+      // 🎈 Balloon Animation + Celebration GIF
+      celebrateBtn.addEventListener("click", () => {
+        for (let i = 0; i < 20; i++) {
+          const balloon = document.createElement("div");
+          const size = Math.random() * 30 + 50;
+          balloon.classList.add("balloon");
+          balloon.style.width = size + "px";
+          balloon.style.height = size * 1.25 + "px";
+
+          // Start position: BELOW the screen
+          const startY = window.innerHeight + 150;
+          balloon.style.bottom = "-" + (size + 100) + "px";
+          balloon.style.left = Math.random() * window.innerWidth + "px";
+
+          // 🎈 Vibrant colors
+          const colors = [
+            "#ff4b4b",
+            "#ff9f1c",
+            "#ffda3e",
+            "#5dd39e",
+            "#3da9fc",
+            "#9d4edd",
+            "#ff77e9",
+            "#00c2ff",
+          ];
+          balloon.style.backgroundColor =
+            colors[Math.floor(Math.random() * colors.length)];
+
+          // Add balloon string
+          const string = document.createElement("div");
+          string.classList.add("string");
+          balloon.appendChild(string);
+
+          document.body.appendChild(balloon);
+
+          // 🎈 Dynamic rise based on actual screen height
+          const riseDistance = window.innerHeight + size * 2;
+
+          balloon.animate(
+            [
+              { transform: `translateY(${riseDistance}px)` },
+              { transform: `translateY(-${riseDistance}px)` },
+            ],
+            {
+              duration: 6000 + Math.random() * 2000,
+              easing: "ease-out",
+              fill: "forwards",
+            }
+          );
+
+          setTimeout(() => balloon.remove(), 8000);
+        }
+
+        // Celebration GIF
+        celebration.classList.remove("hidden");
+        setTimeout(() => celebration.classList.add("hidden"), 4000);
+      });
+    </script>
+  </body>
 </html>
