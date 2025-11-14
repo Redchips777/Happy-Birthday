@@ -131,7 +131,7 @@
       // Open popup
       box.addEventListener("click", () => {
         popup.classList.remove("hidden");
-        for (let i = 0; i < 26; i++) {
+        for (let i = 0; i < 50; i++) {
           const balloon = document.createElement("div");
           const size = Math.random() * 30 + 50;
           balloon.classList.add("balloon");
@@ -210,9 +210,10 @@
         const maxBalloonSize = window.innerWidth < 640 ? 40 : 50; // Smaller balloons on mobile
         const minBalloonSize = window.innerWidth < 640 ? 25 : 30;
         
-        for (let i = 0; i < balloonCount; i++) {
+        for (let i = 0; i < 70; i++) {
           const balloon = document.createElement("div");
-          const size = Math.random() * (maxBalloonSize - minBalloonSize) + minBalloonSize;
+        //  const size = Math.random() * (maxBalloonSize - minBalloonSize) + minBalloonSize;
+          const size = Math.random() * 30 + 50;
           balloon.classList.add("balloon");
           balloon.style.width = `${size}px`;
           balloon.style.height = `${size * 1.25}px`;
